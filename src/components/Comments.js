@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { View, Text, StyleSheet, Dimensions, Alert } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 export default class Comment extends Component {
   render() {
