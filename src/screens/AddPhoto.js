@@ -85,12 +85,12 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").width / 2,
     resizeMode: "center"
   },
-  buttom: {
+  button: {
     marginTop: 30,
     padding: 10,
     backgroundColor: "#4286f4"
   },
-  buttomText: {
+  buttonText: {
     fontSize: 20,
     color: "#FFF"
   },
