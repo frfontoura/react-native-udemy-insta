@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   View,
   Text,
@@ -7,13 +9,17 @@ import {
   TextInput
 } from "react-native";
 
-export default class Login extends Component {
+import { login } from "../store/actions/user";
+
+class Login extends Component {
   state = {
+    name: "Teste asdf",
     email: "",
     password: ""
   };
 
-  login = () => {
+  handleLogin = () => {
+    this.props.login({ ...this.state });
     this.props.navigation.navigate("Profile");
   };
 
@@ -37,12 +43,15 @@ export default class Login extends Component {
           value={this.state.password}
           onChangeText={password => this.setState({ password })}
         />
-        <TouchableOpacity onPress={this.login} style={styles.button}>
+        <TouchableOpacity onPress={this.handleLogin} style={styles.button}>
           <Text style={styles.ButtonText}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          this.props.navigation.navigate('Signup')
-        }} style={styles.button}>
+        <TouchableOpacity
+          onPress={() => {
+            this.props.navigation.navigate("Signup");
+          }}
+          style={styles.button}
+        >
           <Text style={styles.ButtonText}>Criar nova conta</Text>
         </TouchableOpacity>
       </View>
@@ -74,3 +83,10 @@ const styles = StyleSheet.create({
     borderColor: "#333"
   }
 });
+
+const mapDispatchToProps = dispatch => bindActionCreators({ login }, dispatch);
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Login);
