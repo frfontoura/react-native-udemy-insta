@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { StyleSheet, Text, View, Platform, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  Image,
+  TouchableOpacity
+} from "react-native";
 import icon from "../../assets/imgs/icon.png";
 import { Gravatar } from "react-native-gravatar";
+import { withNavigation } from "react-navigation";
 
 class Header extends Component {
   render() {
@@ -19,10 +27,16 @@ class Header extends Component {
           <Image source={icon} style={styles.image} />
           <Text style={styles.title}>Insta Native</Text>
         </View>
-        <View style={styles.userContainer}>
-          <Text style={styles.user}>{name}</Text>
-          {gravatar}
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            this.props.navigation.navigate("Profile");
+          }}
+        >
+          <View style={styles.userContainer}>
+            <Text style={styles.user}>{name}</Text>
+            {gravatar}
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -70,4 +84,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({ user: state.user });
 
-export default connect(mapStateToProps)(Header);
+const headerWithNavigation = withNavigation(Header);
+
+export default connect(mapStateToProps)(headerWithNavigation);
