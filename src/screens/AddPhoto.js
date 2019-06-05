@@ -26,6 +26,11 @@ class AddPhoto extends Component {
   };
 
   pickImage = () => {
+    if (!this.props.name) {
+      Alert.alert("Falha!", noUser);
+      return;
+    }
+
     ImagePicker.showImagePicker(
       {
         title: "Escolha a imagem",
@@ -79,6 +84,7 @@ class AddPhoto extends Component {
             style={styles.input}
             value={this.state.comment}
             onChangeText={comment => this.setState({ comment })}
+            editable={this.props.name != null}
           />
           <TouchableOpacity onPress={this.save} style={styles.button}>
             <Text style={styles.buttonText}>Salvar</Text>
