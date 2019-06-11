@@ -17,12 +17,22 @@ import ImagePicker from "react-native-image-picker";
 
 import { addPost } from "../store/actions/posts";
 
-const noUser = 'Você precisa estar logado para adicionar imagens'
+const noUser = "Você precisa estar logado para adicionar imagens";
 
 class AddPhoto extends Component {
   state = {
     image: null,
     comment: ""
+  };
+
+  componentDidUpdate = prevProps => {
+    if (prevProps.loading && !this.props.loading) {
+      this.setState({
+        image: null,
+        comment: ""
+      });
+      this.props.navigation.navigate("Feed");
+    }
   };
 
   pickImage = () => {
@@ -63,9 +73,6 @@ class AddPhoto extends Component {
         }
       ]
     });
-
-    this.setState({ image: null, comment: "" });
-    this.props.navigation.navigate("Feed");
   };
 
   render() {
@@ -86,7 +93,14 @@ class AddPhoto extends Component {
             onChangeText={comment => this.setState({ comment })}
             editable={this.props.name != null}
           />
-          <TouchableOpacity onPress={this.save} style={styles.button}>
+          <TouchableOpacity
+            onPress={this.save}
+            disabled={this.props.loading}
+            style={[
+              styles.button,
+              this.props.loading ? styles.buttonDisabled : null
+            ]}
+          >
             <Text style={styles.buttonText}>Salvar</Text>
           </TouchableOpacity>
         </View>
@@ -131,17 +145,22 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: "#AAA"
+  },
+  buttonDisabled: {
+    backgroundColor: "#AAA"
   }
 });
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, posts }) => {
   return {
     email: user.email,
     name: user.name,
+    loading: posts.isUploading
   };
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators({ addPost }, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ addPost }, dispatch);
 
 export default connect(
   mapStateToProps,
