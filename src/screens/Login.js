@@ -18,9 +18,14 @@ class Login extends Component {
     password: ""
   };
 
+  componentDidUpdate = prevProps => {
+    if (prevProps.isLoading && !this.props.isLoading) {
+      this.props.navigation.navigate("Profile");
+    }
+  };
+
   handleLogin = () => {
     this.props.login({ ...this.state });
-    this.props.navigation.navigate("Profile");
   };
 
   render() {
@@ -84,9 +89,15 @@ const styles = StyleSheet.create({
   }
 });
 
+const mapStateToProps = ({ user }) => {
+  return {
+    isLoading: user.isLoading
+  };
+};
+
 const mapDispatchToProps = dispatch => bindActionCreators({ login }, dispatch);
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Login);

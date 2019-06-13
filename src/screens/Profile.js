@@ -13,7 +13,7 @@ class Profile extends Component {
   };
 
   render() {
-    const options = { email: "teste@gmail.com", secure: true };
+    const options = { email: this.props.user.email, secure: true };
     return (
       <View style={styles.container}>
         <Gravatar options={options} style={styles.avatar} />
