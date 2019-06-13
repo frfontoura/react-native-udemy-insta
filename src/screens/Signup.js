@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   View,
   Text,
@@ -7,7 +9,9 @@ import {
   TextInput
 } from "react-native";
 
-export default class Signup extends Component {
+import { createUser } from "../store/actions/user";
+
+class Signup extends Component {
   state = {
     name: "",
     email: "",
@@ -38,7 +42,10 @@ export default class Signup extends Component {
           value={this.state.password}
           onChangeText={password => this.setState({ password })}
         />
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
+        <TouchableOpacity
+          onPress={() => this.props.createUser(this.state)}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>Salvar</Text>
         </TouchableOpacity>
       </View>
@@ -71,3 +78,11 @@ const styles = StyleSheet.create({
     paddingLeft: 15
   }
 });
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ createUser }, dispatch);
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Signup);
