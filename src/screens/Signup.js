@@ -18,6 +18,17 @@ class Signup extends Component {
     password: ""
   };
 
+  componentDidUpdate = prevProps => {
+    if (prevProps.isLoading && !this.props.isLoading) {
+      this.props.navigation.navigate("Feed");
+      this.setState({
+        name: "",
+        email: "",
+        password: ""
+      });
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -79,10 +90,16 @@ const styles = StyleSheet.create({
   }
 });
 
+const mapStateToProps = ({ user }) => {
+  return {
+    isLoading: user.isLoading
+  };
+};
+
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ createUser }, dispatch);
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Signup);

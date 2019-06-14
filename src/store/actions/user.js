@@ -5,6 +5,7 @@ import {
   USER_LOADED
 } from "./actionTypes";
 import axios from "axios";
+import { setMessage } from "./message";
 
 const authBaseURL =
   "https://www.googleapis.com/identitytoolkit/v3/relyingparty";
@@ -25,22 +26,78 @@ export const logout = () => {
 
 export const createUser = user => {
   return dispatch => {
+    dispatch(loadingUser());
     axios
       .post(`${authBaseURL}/signupNewUser?key=${API_KEY}`, {
         email: user.email,
         password: user.password,
         returnSecureToken: true
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        dispatch(
+          setMessage({
+            title: "Erro",
+            text: "Ocorreu um erro inesperado!"
+          })
+        );
+      })
       .then(res => {
         if (res.data.localId) {
           axios
             .put(`/users/${res.data.localId}.json`, {
               name: user.name
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+              dispatch(
+                setMessage({
+                  title: "Erro",
+                  text: "Ocorreu um erro inesperado!"
+                })
+              );
+            })
+            .then(() => {
+              dispatch(login(user));
+            });
+        }
+      });
+  };
+};
+
+export const login = user => {
+  return dispatch => {
+    dispatch(loadingUser());
+    axios
+      .post(`${authBaseURL}/verifyPassword?key=${API_KEY}`, {
+        email: user.email,
+        password: user.password,
+        returnSecureToken: true
+      })
+      .catch(err => {
+        dispatch(
+          setMessage({
+            title: "Erro",
+            text: "Ocorreu um erro inesperado!"
+          })
+        );
+      })
+      .then(res => {
+        if (res.data.localId) {
+          user.token = res.data.idToken;
+          axios
+            .get(`/users/${res.data.localId}.json`)
+            .catch(err => {
+              dispatch(
+                setMessage({
+                  title: "Erro",
+                  text: "Ocorreu um erro inesperado!"
+                })
+              );
+            })
             .then(res => {
-              console.log("Usuário criado com sucesso!");
+              delete user.password;
+              user.name = res.data.name;
+              dispatch(userLogged(user));
+              dispatch(userLoaded());
             });
         }
       });
@@ -56,32 +113,5 @@ export const loadingUser = () => {
 export const userLoaded = () => {
   return {
     type: USER_LOADED
-  };
-};
-
-export const login = user => {
-  return dispatch => {
-    dispatch(loadingUser());
-    axios
-      .post(`${authBaseURL}/verifyPassword?key=${API_KEY}`, {
-        email: user.email,
-        password: user.password,
-        returnSecureToken: true
-      })
-      .catch(err => console.log(err))
-      .then(res => {
-        if (res.data.localId) {
-          user.token = res.data.idToken;
-          axios
-            .get(`/users/${res.data.localId}.json`)
-            .catch(err => console.log(err))
-            .then(res => {
-              delete user.password;
-              user.name = res.data.name;
-              dispatch(userLogged(user));
-              dispatch(userLoaded());
-            });
-        }
-      });
   };
 };
