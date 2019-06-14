@@ -1,10 +1,7 @@
-import {
-  SET_POSTS,
-  ADD_COMMENT,
-  CREATING_POST,
-  POST_CREATED
-} from "./actionTypes";
+import { SET_POSTS, CREATING_POST, POST_CREATED } from "./actionTypes";
 import axios from "axios";
+
+import { setMessage } from './message'
 
 export const addPost = post => {
   return dispatch => {
@@ -17,12 +14,26 @@ export const addPost = post => {
         image: post.image.base64
       }
     })
-      .catch(err => console.log(err))
+      .catch(err => {
+        dispatch(
+          setMessage({
+            title: "Erro",
+            text: "Ocorreu um erro inesperado!"
+          })
+        );
+      })
       .then(res => {
         post.image = res.data.imageUrl;
         axios
           .post("/posts.json", { ...post })
-          .catch(err => console.log(err))
+          .catch(err => {
+            dispatch(
+              setMessage({
+                title: "Erro",
+                text: err
+              })
+            );
+          })
           .then(res => {
             dispatch(fetchPosts());
             dispatch(postCreated());
@@ -35,13 +46,27 @@ export const addComment = payload => {
   return dispatch => {
     axios
       .get(`/posts/${payload.postId}.json`)
-      .catch(err => console.log(err))
+      .catch(err => {
+        dispatch(
+          setMessage({
+            title: "Erro",
+            text: err
+          })
+        );
+      })
       .then(res => {
         const comments = res.data.comments || [];
         comments.push(payload.comment);
         axios
           .patch(`/posts/${payload.postId}.json`, { comments })
-          .catch(err => console.log(err))
+          .catch(err => {
+            dispatch(
+              setMessage({
+                title: "Erro",
+                text: err
+              })
+            );
+          })
           .then(res => {
             dispatch(fetchPosts());
           });
@@ -60,7 +85,14 @@ export const fetchPosts = () => {
   return dispatch => {
     axios
       .get("/posts.json")
-      .catch(err => console.log(err))
+      .catch(err => {
+        dispatch(
+          setMessage({
+            title: "Erro",
+            text: err
+          })
+        );
+      })
       .then(res => {
         const rawPosts = res.data;
         const posts = [];

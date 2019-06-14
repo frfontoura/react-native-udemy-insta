@@ -7,5 +7,8 @@ export const USER_LOADED = "USER_LOADED";
 /** POST */
 export const SET_POSTS = "SET_POSTS";
 export const ADD_COMMENT = "ADD_COMMENT";
-export const CREATING_POST = 'CREATING_POST'
-export const POST_CREATED = 'POST_CREATED'
+export const CREATING_POST = "CREATING_POST";
+export const POST_CREATED = "POST_CREATED";
+
+/** MESSAGES */
+export const SET_MESSAGE = "SET_MESSAGE";
