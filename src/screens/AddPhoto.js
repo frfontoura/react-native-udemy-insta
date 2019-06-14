@@ -79,7 +79,7 @@ class AddPhoto extends Component {
     return (
       <ScrollView>
         <View style={styles.container}>
-          <Text style={styles.title}>Compartilher uma imagem</Text>
+          <Text style={styles.title}>Compartilhar uma imagem</Text>
           <View style={styles.imageContainer}>
             <Image source={this.state.image} style={styles.image} />
           </View>
