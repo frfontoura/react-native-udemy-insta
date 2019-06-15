@@ -13,14 +13,14 @@ import { login } from "../store/actions/user";
 
 class Login extends Component {
   state = {
-    name: "Teste asdf",
+    name: "",
     email: "",
     password: ""
   };
 
   componentDidUpdate = prevProps => {
     if (prevProps.isLoading && !this.props.isLoading) {
-      this.props.navigation.navigate("Feed");
+      this.props.navigation.navigate("Profile");
     }
   };
 
